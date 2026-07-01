@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery — Angie K.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #faf7f4;
+      --text: #2e2a27;
+      --muted: #8a7f78;
+      --accent: #E8724A;
+      --accent-hover: #CF6039;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    header {
+      max-width: 1100px;
+      margin: 0 auto 3rem;
+      text-align: center;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 1.5rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1.5px solid transparent;
+      padding-bottom: 2px;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .back:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .page-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 6vw, 3rem);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-title .dot {
+      color: var(--accent);
+    }
+
+    .tagline {
+      font-size: 0.95rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+
+    .divider {
+      width: 40px;
+      height: 2px;
+      background-color: var(--accent);
+      margin: 1.5rem auto 0;
+      border-radius: 2px;
+    }
+
+    .grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .grid figure {
+      position: relative;
+      overflow: hidden;
+      border-radius: 6px;
+      aspect-ratio: 4 / 5;
+      background: #ece6e1;
+      cursor: pointer;
+    }
+
+    .grid img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .grid figure:hover img {
+      transform: scale(1.05);
+    }
+
+    .grid figure figcaption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.78rem;
+      color: #fff;
+      background: linear-gradient(to top, rgba(0,0,0,0.55), transparent);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .grid figure:hover figcaption {
+      opacity: 1;
+    }
+
+    .empty-note {
+      max-width: 500px;
+      margin: 4rem auto 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      display: none;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(46, 42, 39, 0.94);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 2rem;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 4px;
+    }
+
+    .lightbox-close,
+    .lightbox-prev,
+    .lightbox-next {
+      position: absolute;
+      background: none;
+      border: none;
+      color: #faf7f4;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.75rem;
+      opacity: 0.75;
+      transition: opacity 0.2s ease;
+    }
+
+    .lightbox-close:hover,
+    .lightbox-prev:hover,
+    .lightbox-next:hover {
+      opacity: 1;
+      color: var(--accent);
+    }
+
+    .lightbox-close {
+      top: 1rem;
+      right: 1rem;
+    }
+
+    .lightbox-prev {
+      left: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .lightbox-next {
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 4rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      opacity: 0.6;
+      letter-spacing: 0.03em;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="back" href="index.html">&larr; Back home</a>
+    <h1 class="page-title">Gallery<span class="dot">.</span></h1>
+    <p class="tagline">A few frames I've kept</p>
+    <div class="divider"></div>
+  </header>
+
+  <div class="grid" id="grid"></div>
+  <p class="empty-note" id="emptyNote">
+    No photos yet — drop image files into <code>images/gallery/</code> and list
+    them in the <code>photos</code> array near the bottom of gallery.html.
+  </p>
+
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lbClose">&#10005;</button>
+    <button class="lightbox-prev" id="lbPrev">&#10094;</button>
+    <img id="lbImg" src="" alt="" />
+    <button class="lightbox-next" id="lbNext">&#10095;</button>
+  </div>
+
+  <p class="footer">angiek.studio &nbsp;&middot;&nbsp; © 2026</p>
+
+  <script>
+    // Photo list lives in images/gallery/photos.json, not here.
+    // To add/remove/reorder photos or edit captions, edit that file directly
+    // (or run generate_gallery.py to pull in new files automatically) —
+    // you should never need to touch this HTML/JS again.
+
+    const grid = document.getElementById('grid');
+    const emptyNote = document.getElementById('emptyNote');
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lbImg');
+    let photos = [];
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+      currentIndex = index;
+      lbImg.src = photos[index].src;
+      lbImg.alt = photos[index].alt || '';
+      lightbox.classList.add('open');
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+    }
+
+    function showRelative(delta) {
+      currentIndex = (currentIndex + delta + photos.length) % photos.length;
+      lbImg.src = photos[currentIndex].src;
+      lbImg.alt = photos[currentIndex].alt || '';
+    }
+
+    function render() {
+      if (photos.length === 0) {
+        emptyNote.style.display = 'block';
+        return;
+      }
+      photos.forEach((photo, index) => {
+        const figure = document.createElement('figure');
+
+        const img = document.createElement('img');
+        img.src = photo.src;
+        img.alt = photo.alt || '';
+        img.loading = 'lazy';
+
+        const caption = document.createElement('figcaption');
+        caption.textContent = photo.alt || '';
+
+        figure.appendChild(img);
+        figure.appendChild(caption);
+        figure.addEventListener('click', () => openLightbox(index));
+
+        grid.appendChild(figure);
+      });
+    }
+
+    fetch('images/gallery/photos.json')
+      .then(res => res.json())
+      .then(data => {
+        photos = data;
+        render();
+      })
+      .catch(() => {
+        emptyNote.style.display = 'block';
+        emptyNote.textContent = 'Could not load images/gallery/photos.json.';
+      });
+
+    document.getElementById('lbClose').addEventListener('click', closeLightbox);
+    document.getElementById('lbPrev').addEventListener('click', () => showRelative(-1));
+    document.getElementById('lbNext').addEventListener('click', () => showRelative(1));
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showRelative(-1);
+      if (e.key === 'ArrowRight') showRelative(1);
+    });
+  </script>
+
+</body>
+</html>
